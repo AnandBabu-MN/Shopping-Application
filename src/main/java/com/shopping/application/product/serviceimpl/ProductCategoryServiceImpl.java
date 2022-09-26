@@ -27,7 +27,12 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public List<ProductCategory> getAllProductCategory() {
-        return productCategoryRepository.findAll().stream().filter(productCategory -> productCategory.isPublished()).collect(Collectors.toList());
+        return productCategoryRepository.findAll();
+    }
+
+    @Override
+    public List<ProductCategory> getAllProductCategoryCustomer() {
+        return getAllProductCategory().stream().filter(productCategory -> productCategory.isPublished()).collect(Collectors.toList());
     }
 
     @Override

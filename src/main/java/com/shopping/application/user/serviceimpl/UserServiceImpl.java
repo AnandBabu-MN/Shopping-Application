@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
     public Boolean validateUserCredentials(UserDto userDto) {
         String regexEmail = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
         if (!Pattern.compile(regexEmail, Pattern.CASE_INSENSITIVE).matcher((userDto.getEmail())).find()) {

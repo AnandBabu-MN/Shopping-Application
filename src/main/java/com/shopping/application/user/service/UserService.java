@@ -2,11 +2,9 @@ package com.shopping.application.user.service;
 
 import com.shopping.application.user.dto.RegistrationResponse;
 import com.shopping.application.user.dto.UserDto;
-import com.shopping.application.user.dto.UserDto;
 import com.shopping.application.user.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 

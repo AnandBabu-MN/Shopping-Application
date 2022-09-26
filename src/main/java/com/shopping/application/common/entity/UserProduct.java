@@ -1,14 +1,22 @@
 package com.shopping.application.common.entity;
 
-
 import com.shopping.application.order.entity.Order;
 import com.shopping.application.product.entity.Products;
 import com.shopping.application.user.entity.User;
 import lombok.Getter;
 import lombok.Setter;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter

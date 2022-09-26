@@ -10,12 +10,15 @@ import com.shopping.application.order.repository.OrderDetailsRepository;
 import com.shopping.application.order.service.OrderService;
 import com.shopping.application.product.entity.Products;
 import com.shopping.application.product.repository.ProductRepository;
+import com.shopping.application.user.dto.UserDto;
 import com.shopping.application.user.entity.User;
 import com.shopping.application.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<OrderDto> placeOrder(OrderDto orderDto) {
+        orderDto.setUser(modelMapper.map(getLoggerInUser(), UserDto.class));
         try {
             if (!validateOrder(orderDto).get()) throw new IllegalArgumentException(ErrorCodes.ORDER_QUANTITY_INVALID);
         } catch (IllegalArgumentException e) {
@@ -66,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderDetailsRepository.save(order);
         AtomicInteger totalPrice = new AtomicInteger();
         savedOrder.getUserProducts().stream().forEach(userProduct -> {
+            validateProduct(userProduct);
             Products products = userProduct.getProducts();
             products.setQuantity(products.getQuantity() - userProduct.getQuantity());
             productRepository.save(products);
@@ -75,10 +80,8 @@ public class OrderServiceImpl implements OrderService {
         savedOrder.setOrderStatus("CONFIRMED");
         savedOrder.setOrderedTime(LocalDateTime.now());
         Order savedOrder2 = orderDetailsRepository.save(savedOrder);
-        OrderDto orders = modelMapper.map(savedOrder, OrderDto.class);
-        orders.setUserProducts(orderDto.getUserProducts());
-        validateProduct(orderDto);
-        return new ResponseEntity(orderDto, HttpStatus.OK);
+        OrderDto ordersDto = modelMapper.map(savedOrder, OrderDto.class);
+        return new ResponseEntity(ordersDto, HttpStatus.OK);
     }
 
     @Override
@@ -89,6 +92,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<OrderDto> updateOrder(OrderDto orderDto) {
+        orderDto.setOrderStatus("MODIFIED");
         return placeOrder(orderDto);
     }
 
@@ -101,24 +105,30 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public AtomicBoolean validateOrder(OrderDto orderDto) {
+    private AtomicBoolean validateOrder(OrderDto orderDto) {
         AtomicBoolean isAvailable = new AtomicBoolean(true);
         orderDto.getUserProducts().stream().forEach(userProduct -> {
             if (productRepository.findById(userProduct.getProducts().getProductId()).orElseThrow(() ->
                     new IllegalArgumentException(ErrorCodes.PRODUCT_NOT_FOUND)).getQuantity()
-                    < userProduct.getQuantity()) isAvailable.set(false);
+                    <= userProduct.getQuantity()) isAvailable.set(false);
         });
         return isAvailable;
     }
 
-    public void validateProduct(OrderDto orderDto) {
-        AtomicBoolean isAvailable = new AtomicBoolean(true);
-        orderDto.getUserProducts().stream().forEach(userProduct -> {
-            Products products = userProduct.getProducts();
-            if (productRepository.findById(products.getProductId()).orElseThrow(() ->
-                    new IllegalArgumentException(ErrorCodes.PRODUCT_NOT_FOUND)).getQuantity()
-                    == products.getQuantity()) products.setPublished(false);
-            productRepository.save(products);
-        });
+    private void validateProduct(UserProduct userProduct) {
+        Products products = userProduct.getProducts();
+        Products products1 = productRepository.findById(products.getProductId()).orElseThrow(() ->
+                new IllegalArgumentException(ErrorCodes.PRODUCT_NOT_FOUND));
+        if (products1.getQuantity()
+                == products.getQuantity()) products1.setPublished(false);
+        productRepository.save(products1);
+    }
+
+    @Override
+    public User getLoggerInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User loggerInUser = userRepository.findByEmail(email).get();
+        return loggerInUser;
     }
 }

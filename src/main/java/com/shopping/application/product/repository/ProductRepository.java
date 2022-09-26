@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Products,Integer> {
-//    @Query("SELECT quantity FROM products")
-//    int getQuantity(int quantity);
 }

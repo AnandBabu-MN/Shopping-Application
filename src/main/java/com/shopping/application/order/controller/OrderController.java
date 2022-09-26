@@ -5,6 +5,7 @@ import com.shopping.application.order.entity.Order;
 import com.shopping.application.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,11 +27,13 @@ public class OrderController {
         return orderService.findAllOrders();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/delete")
     public String deleteOrder(@RequestParam int orderId){
         return  orderService.deleteOrder(orderId);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<OrderDto> updateOrder(@RequestBody OrderDto orderDto){
         return orderService.updateOrder(orderDto);

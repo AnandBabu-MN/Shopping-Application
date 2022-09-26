@@ -7,8 +7,8 @@ import com.shopping.application.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -19,6 +19,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
         log.info("UserController || getAllUsers || getting the User Details ");
@@ -43,6 +44,7 @@ public class UserController {
         return userService.updateUser(userDto);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity deleteUser(@RequestParam long id){
         log.info("UserController || deleteUser || Deleting a User");

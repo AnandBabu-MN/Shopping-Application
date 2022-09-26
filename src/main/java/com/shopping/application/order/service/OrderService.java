@@ -2,6 +2,7 @@ package com.shopping.application.order.service;
 
 import com.shopping.application.order.dto.OrderDto;
 import com.shopping.application.order.entity.Order;
+import com.shopping.application.user.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,4 +19,5 @@ public interface OrderService {
      String cancelOrder(int orderId);
 
 
+    User getLoggerInUser();
 }

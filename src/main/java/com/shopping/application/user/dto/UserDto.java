@@ -1,10 +1,11 @@
 package com.shopping.application.user.dto;
 
-import com.shopping.application.common.entity.UserProduct;
-import com.shopping.application.user.entity.User;
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor

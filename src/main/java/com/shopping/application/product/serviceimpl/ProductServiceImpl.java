@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,9 +32,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Products> getAllProducts() {
-        return productRepository.findAll().stream().filter(products -> products.isPublished() && products.getProductCategory().isPublished()).collect(Collectors.toList());
+        return productRepository.findAll();
     }
 
+    @Override
+    public List<Products> getAllProductsCustomer() {
+        return getAllProducts().stream().filter(products -> products.isPublished() && products.getProductCategory().isPublished()).collect(Collectors.toList());
+    }
     @Override
     public Optional<Products> getProductById(int id) {
         Optional<Products> products;
@@ -75,9 +78,5 @@ public class ProductServiceImpl implements ProductService {
         Products newProduct = productRepository.save(products);
         modelMapper.map(newProduct, ProductDto.class);
         return new ResponseEntity(new ResponseMessage(true, "New Product Inserted to Inventory"), HttpStatus.OK);
-    }
-
-    Products productAvailability(){
-        return null;
     }
 }

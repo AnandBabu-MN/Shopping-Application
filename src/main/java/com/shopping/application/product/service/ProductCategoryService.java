@@ -11,6 +11,9 @@ import java.util.Optional;
 @Service
 public interface ProductCategoryService {
     List<ProductCategory> getAllProductCategory();
+
+    List<ProductCategory> getAllProductCategoryCustomer();
+
     Optional<ProductCategory> getProductCategoryById(int id);
     ResponseEntity<ProductCategoryDto> updateProductCategory(ProductCategoryDto productCategoryDto, int id);
     ResponseEntity<ResponseMessage> deleteProductCategoryById(int id);
