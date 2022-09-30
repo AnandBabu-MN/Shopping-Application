@@ -6,14 +6,14 @@ import com.shopping.application.product.dto.ProductCategoryDto;
 import com.shopping.application.product.entity.ProductCategory;
 import com.shopping.application.product.repository.ProductCategoryRepository;
 import com.shopping.application.product.service.ProductCategoryService;
-import org.hibernate.service.spi.ServiceException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,14 +36,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public Optional<ProductCategory> getProductCategoryById(int id) {
-        Optional<ProductCategory> productCategory;
-        try {
-            productCategory = productCategoryRepository.findById(id);
-        } catch (ServiceException e) {
-            throw new ServiceException(ErrorCodes.PRODUCT_NOT_FOUND);
-        }
-        return productCategory;
+    public ProductCategory getProductCategoryById(int id) {
+        return productCategoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCodes.PRODUCT_NOT_FOUND));
 
     }
 

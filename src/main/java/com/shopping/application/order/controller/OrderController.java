@@ -6,8 +6,14 @@ import com.shopping.application.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
@@ -16,7 +22,6 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
-
     @PostMapping("/placeOrder")
     public ResponseEntity<OrderDto> placeOrder(@RequestBody OrderDto orderDto) {
         return orderService.placeOrder(orderDto);
@@ -40,7 +45,7 @@ public class OrderController {
     }
 
     @PutMapping("/cancel")
-    String cancelOrder(@RequestParam int orderId){
+    public String cancelOrder(@RequestParam int orderId){
         return orderService.cancelOrder(orderId);
     }
 

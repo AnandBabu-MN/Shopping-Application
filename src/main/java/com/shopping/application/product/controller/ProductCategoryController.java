@@ -7,17 +7,9 @@ import com.shopping.application.product.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/productCategory")
@@ -38,7 +30,7 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/getProductCategoryById")
-    public Optional<ProductCategory> getProductCategoryById(@RequestParam int id){
+    public ProductCategory getProductCategoryById(@RequestParam int id){
         return productCategoryService.getProductCategoryById(id);
     }
 

@@ -6,7 +6,6 @@ import com.shopping.application.product.dto.ProductDto;
 import com.shopping.application.product.entity.Products;
 import com.shopping.application.product.repository.ProductRepository;
 import com.shopping.application.product.service.ProductService;
-import org.hibernate.service.spi.ServiceException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,15 +38,11 @@ public class ProductServiceImpl implements ProductService {
     public List<Products> getAllProductsCustomer() {
         return getAllProducts().stream().filter(products -> products.isPublished() && products.getProductCategory().isPublished()).collect(Collectors.toList());
     }
+
     @Override
-    public Optional<Products> getProductById(int id) {
-        Optional<Products> products;
-        try {
-            products = productRepository.findById(id);
-        } catch (ServiceException e) {
-            throw new ServiceException(ErrorCodes.PRODUCT_NOT_FOUND);
-        }
-        return products;
+    public Products getProductById(int id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCodes.PRODUCT_NOT_FOUND));
     }
 
     @Override

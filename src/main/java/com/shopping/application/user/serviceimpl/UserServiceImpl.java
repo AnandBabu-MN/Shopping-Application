@@ -2,8 +2,8 @@ package com.shopping.application.user.serviceimpl;
 
 import com.shopping.application.config.ErrorCodes;
 import com.shopping.application.config.ResponseMessage;
-import com.shopping.application.user.dto.UserDto;
 import com.shopping.application.user.dto.RegistrationResponse;
+import com.shopping.application.user.dto.UserDto;
 import com.shopping.application.user.entity.User;
 import com.shopping.application.user.repository.UserRepository;
 import com.shopping.application.user.service.UserService;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(user);
         modelMapper.map(updatedUser, UserDto.class);
         logger.info("UserServiceImpl || updateUser || User detail has been updated");
-        return new ResponseEntity(new ResponseMessage(true, "User with this Email" + userDto.getEmail() + " is Updated"), HttpStatus.OK);
+        return new ResponseEntity(new ResponseMessage(true, "User with this Id is Updated"), HttpStatus.OK);
     }
 
     @Override

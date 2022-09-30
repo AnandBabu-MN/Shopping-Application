@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<RegistrationResponse> saveUser(@RequestBody UserDto userDto){
+    public ResponseEntity<RegistrationResponse> saveUser(@RequestBody @Valid UserDto userDto){
         log.info("UserController || saveUser || Saving Users to DB");
         return userService.saveUser(userDto);
     }

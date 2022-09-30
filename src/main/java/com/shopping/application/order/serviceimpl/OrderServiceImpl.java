@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         savedOrder.setTotalPrice(totalPrice.get());
         savedOrder.setOrderStatus("CONFIRMED");
         savedOrder.setOrderedTime(LocalDateTime.now());
-        Order savedOrder2 = orderDetailsRepository.save(savedOrder);
+        orderDetailsRepository.save(savedOrder);
         OrderDto ordersDto = modelMapper.map(savedOrder, OrderDto.class);
         return new ResponseEntity(ordersDto, HttpStatus.OK);
     }
@@ -98,8 +98,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String cancelOrder(int orderId) {
-        Order order = orderDetailsRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException(ErrorCodes.ORDER_NOT_FOUND));
-        order.setOrderStatus("Cancelled");
+        Order order = orderDetailsRepository.findById(orderId).
+                orElseThrow(() -> new IllegalArgumentException(ErrorCodes.ORDER_NOT_FOUND));
+        order.setOrderStatus("Order Cancelled");
         orderDetailsRepository.save(order);
         return "Order Cancelled";
     }
@@ -128,7 +129,6 @@ public class OrderServiceImpl implements OrderService {
     public User getLoggerInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        User loggerInUser = userRepository.findByEmail(email).get();
-        return loggerInUser;
+        return userRepository.findByEmail(email).get();
     }
 }
